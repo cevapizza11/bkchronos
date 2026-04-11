@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Chronos Burger King</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bk-red: #D62300;
+    --bk-orange: #F5821F;
+    --bk-yellow: #FFCD00;
+    --bk-brown: #502314;
+    --bk-dark: #1a1008;
+    --bk-cream: #FFF8EE;
+    --bk-light: #FFF3DC;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Barlow', sans-serif;
+    background: var(--bk-dark);
+    min-height: 100vh;
+    color: var(--bk-cream);
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--bk-red);
+    padding: 14px 16px 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.4);
+  }
+  .burger-icon {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+  }
+  .header-text {}
+  .header-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--bk-yellow);
+    line-height: 1;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .header-sub {
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.75);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  /* AUDITOR INPUT */
+  .auditor-bar {
+    background: var(--bk-brown);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 2px solid var(--bk-orange);
+  }
+  .auditor-bar label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--bk-yellow);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .auditor-bar input {
+    flex: 1;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 6px;
+    padding: 7px 12px;
+    font-size: 14px;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 500;
+    color: #fff;
+    outline: none;
+  }
+  .auditor-bar input::placeholder { color: rgba(255,255,255,0.35); }
+  .auditor-bar input:focus { border-color: var(--bk-yellow); background: rgba(255,255,255,0.15); }
+
+  /* MAIN */
+  .main { padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+
+  /* SECTION */
+  .section {
+    border-radius: 14px;
+    overflow: hidden;
+    background: #2a1506;
+    border: 1.5px solid rgba(245,130,31,0.3);
+  }
+  .section-header {
+    background: var(--bk-orange);
+    padding: 11px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--bk-dark);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .btn-add {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: var(--bk-dark);
+    border: none;
+    color: var(--bk-yellow);
+    font-size: 22px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    line-height: 1;
+    flex-shrink: 0;
+    transition: transform 0.15s;
+  }
+  .btn-add:active { transform: scale(0.9); }
+
+  /* CHRONO LIST */
+  .chrono-list { display: flex; flex-direction: column; }
+  .empty {
+    padding: 20px;
+    text-align: center;
+    font-size: 13px;
+    color: rgba(255,248,238,0.3);
+    font-style: italic;
+  }
+  .chrono-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .chrono-row:last-child { border-bottom: none; }
+  .chrono-info { flex: 1; min-width: 0; }
+  .chrono-label {
+    font-size: 10px;
+    color: rgba(255,248,238,0.45);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-bottom: 1px;
+  }
+  .chrono-time {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--bk-yellow);
+    letter-spacing: 2px;
+    line-height: 1;
+  }
+  .chrono-running .chrono-time { color: #fff; }
+
+  .chrono-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+  .btn-circle {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    transition: transform 0.1s, opacity 0.1s;
+    flex-shrink: 0;
+  }
+  .btn-circle:active { transform: scale(0.88); }
+  .btn-reset { background: rgba(255,255,255,0.1); color: rgba(255,248,238,0.7); font-size: 18px; }
+  .btn-start { background: #22c55e; color: #fff; }
+  .btn-stop { background: var(--bk-red); color: #fff; }
+  .btn-delete { background: transparent; border: none; color: rgba(255,255,255,0.2); font-size: 16px; cursor: pointer; padding: 6px; }
+  .btn-delete:active { color: var(--bk-red); }
+
+  /* ORDER NUMBER */
+  .chrono-order-input {
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .chrono-order-input label {
+    font-size: 10px;
+    color: rgba(255,248,238,0.4);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .chrono-order-input input {
+    width: 90px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 5px;
+    padding: 3px 8px;
+    font-size: 13px;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 600;
+    color: var(--bk-yellow);
+    outline: none;
+    letter-spacing: 0.5px;
+  }
+  .chrono-order-input input::placeholder { color: rgba(255,255,255,0.2); font-weight: 400; }
+  .chrono-order-input input:focus { border-color: var(--bk-orange); background: rgba(255,255,255,0.12); }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    padding: 18px 16px 32px;
+    font-size: 11px;
+    color: rgba(255,248,238,0.2);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <svg class="burger-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- bun top -->
+    <ellipse cx="24" cy="13" rx="18" ry="8" fill="#E8812A"/>
+    <ellipse cx="24" cy="10" rx="17" ry="6" fill="#F5A63D"/>
+    <!-- sesame seeds -->
+    <ellipse cx="18" cy="9" rx="2" ry="1" fill="#C96C1A" transform="rotate(-15 18 9)"/>
+    <ellipse cx="26" cy="7.5" rx="2" ry="1" fill="#C96C1A" transform="rotate(10 26 7.5)"/>
+    <ellipse cx="32" cy="10" rx="2" ry="1" fill="#C96C1A" transform="rotate(-5 32 10)"/>
+    <!-- lettuce -->
+    <path d="M6 20 Q12 17 18 20 Q24 23 30 20 Q36 17 42 20 L42 22 Q36 19 30 22 Q24 25 18 22 Q12 19 6 22 Z" fill="#4CAF50"/>
+    <!-- cheese -->
+    <path d="M7 22 L41 22 L43 25 L5 25 Z" fill="#FFCD00"/>
+    <!-- patty -->
+    <rect x="6" y="25" width="36" height="8" rx="2" fill="#6B2D0A"/>
+    <rect x="6" y="25" width="36" height="3" rx="1" fill="#7D3510"/>
+    <!-- tomato -->
+    <rect x="6" y="33" width="36" height="3" rx="1" fill="#D62300" opacity="0.9"/>
+    <!-- bun bottom -->
+    <ellipse cx="24" cy="38" rx="18" ry="6" fill="#E8812A"/>
+    <ellipse cx="24" cy="37" rx="18" ry="5" fill="#F5A63D"/>
+  </svg>
+  <div class="header-text">
+    <div class="header-title">Chronos Burger King</div>
+    <div class="header-sub">Suivi des temps d'audit</div>
+  </div>
+</div>
+
+<!-- AUDITOR NAME -->
+<div class="auditor-bar">
+  <label>Auditeur</label>
+  <input type="text" id="auditor-name" placeholder="Nom de l'auditeur..." />
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-title">Comptoir</span>
+      <button class="btn-add" onclick="addChrono('comptoir')" title="Ajouter un chrono">+</button>
+    </div>
+    <div class="chrono-list" id="list-comptoir">
+      <div class="empty">Appuyez sur + pour démarrer un chrono</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <span class="section-title">Drive</span>
+      <button class="btn-add" onclick="addChrono('drive')" title="Ajouter un chrono">+</button>
+    </div>
+    <div class="chrono-list" id="list-drive">
+      <div class="empty">Appuyez sur + pour démarrer un chrono</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">Burger King Audit Tool</div>
+
+<script>
+const state = { comptoir: [], drive: [] };
+let idCounter = 0;
+
+function pad(n) { return String(n).padStart(2, '0'); }
+
+function formatTime(ms) {
+  const h = Math.floor(ms / 3600000);
+  const m = Math.floor((ms % 3600000) / 60000);
+  const s = Math.floor((ms % 60000) / 1000);
+  return pad(h) + ':' + pad(m) + ':' + pad(s);
+}
+
+function formatDate(d) {
+  const day = pad(d.getDate()), mon = pad(d.getMonth()+1), yr = String(d.getFullYear()).slice(2);
+  const h = pad(d.getHours()), min = pad(d.getMinutes());
+  return day + '/' + mon + '/' + yr + ' ' + h + ':' + min;
+}
+
+function addChrono(section) {
+  const id = ++idCounter;
+  const entry = { id, section, elapsed: 0, running: false, startedAt: null, interval: null, createdAt: new Date(), orderNum: '' };
+  state[section].push(entry);
+  render(section);
+}
+
+function updateOrder(section, id, val) {
+  const e = state[section].find(x => x.id === id);
+  if (e) e.orderNum = val;
+}
+
+function toggleChrono(section, id) {
+  const e = state[section].find(x => x.id === id);
+  if (!e) return;
+  if (!e.running) {
+    if (e.elapsed === 0) e.createdAt = new Date();
+    e.startedAt = Date.now() - e.elapsed;
+    e.running = true;
+    e.interval = setInterval(() => {
+      e.elapsed = Date.now() - e.startedAt;
+      const el = document.getElementById('time-' + id);
+      if (el) el.textContent = formatTime(e.elapsed);
+    }, 100);
+  } else {
+    clearInterval(e.interval);
+    e.running = false;
+  }
+  render(section);
+}
+
+function resetChrono(section, id) {
+  const e = state[section].find(x => x.id === id);
+  if (!e) return;
+  clearInterval(e.interval);
+  e.elapsed = 0;
+  e.running = false;
+  e.startedAt = null;
+  e.createdAt = new Date();
+  render(section);
+}
+
+function deleteChrono(section, id) {
+  const e = state[section].find(x => x.id === id);
+  if (e) clearInterval(e.interval);
+  state[section] = state[section].filter(x => x.id !== id);
+  render(section);
+}
+
+function render(section) {
+  const list = document.getElementById('list-' + section);
+  const entries = state[section];
+  if (!entries.length) {
+    list.innerHTML = '<div class="empty">Appuyez sur + pour démarrer un chrono</div>';
+    return;
+  }
+  list.innerHTML = entries.map((e, i) => {
+    const label = formatDate(e.createdAt);
+    const time = formatTime(e.elapsed);
+    const orderVal = (e.orderNum || '').replace(/"/g, '&quot;');
+    return '<div class="chrono-row' + (e.running ? ' chrono-running' : '') + '">' +
+      '<div class="chrono-info">' +
+        '<div class="chrono-label">Chrono ' + (i+1) + ' &nbsp;·&nbsp; ' + label + '</div>' +
+        '<div class="chrono-order-input">' +
+          '<label>Cmd #</label>' +
+          '<input type="text" inputmode="numeric" placeholder="N° commande" value="' + orderVal + '" ' +
+            'oninput="updateOrder(\'' + section + '\',' + e.id + ',this.value)" />' +
+        '</div>' +
+        '<div class="chrono-time" id="time-' + e.id + '">' + time + '</div>' +
+      '</div>' +
+      '<div class="chrono-actions">' +
+        '<button class="btn-circle btn-reset" onclick="resetChrono(\'' + section + '\',' + e.id + ')" title="Réinitialiser">↺</button>' +
+        '<button class="btn-circle ' + (e.running ? 'btn-stop' : 'btn-start') + '" onclick="toggleChrono(\'' + section + '\',' + e.id + ')">' +
+          (e.running ? '■' : '▶') +
+        '</button>' +
+        '<button class="btn-delete" onclick="deleteChrono(\'' + section + '\',' + e.id + ')">✕</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+</script>
+</body>
+</html>
