@@ -361,7 +361,7 @@ function renderChrono(section) {
       '<div class="chrono-info">' +
         '<div class="chrono-label">Chrono '+(i+1)+' &nbsp;·&nbsp; '+formatDate(e.createdAt)+'</div>' +
         '<div class="chrono-order-input"><label>Cmd #</label>' +
-        '<input type="text" inputmode="numeric" placeholder="N° commande" value="'+orderVal+'" oninput="updateOrder(\''+section+'\','+e.id+',this.value)"/></div>' +
+        '<input type="text" placeholder="N° commande" value="'+orderVal+'" oninput="updateOrder(\''+section+'\','+e.id+',this.value)"/></div>' +
         '<div class="chrono-time" id="time-'+e.id+'">'+formatTime(e.elapsed)+'</div>' +
       '</div>' +
       '<div class="chrono-actions">' +
