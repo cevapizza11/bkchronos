@@ -470,6 +470,7 @@ async function showBlockedScreen() {
   const priceSnap = await getDoc(doc(db,'settings','pricing'));
   const price = priceSnap.exists() ? priceSnap.data().price : 2.99;
   document.getElementById('blocked-price').textContent = price.toFixed(2).replace('.',',') + '€/mois';
+  document.getElementById('paypal-link').href = 'https://www.paypal.com/paypalme/bkteamauditeur/' + price.toFixed(2);
   showScreen('blocked');
 }
 
