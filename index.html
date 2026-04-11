@@ -3,394 +3,540 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Chronos Burger King</title>
+<title>BK Chronos</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bk-red: #D62300;
-    --bk-orange: #F5821F;
-    --bk-yellow: #FFCD00;
-    --bk-brown: #502314;
-    --bk-dark: #1a1008;
-    --bk-cream: #FFF8EE;
-    --bk-light: #FFF3DC;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'Barlow', sans-serif;
-    background: var(--bk-dark);
-    min-height: 100vh;
-    color: var(--bk-cream);
-  }
+:root {
+  --bk-red: #D62300;
+  --bk-orange: #F5821F;
+  --bk-yellow: #FFCD00;
+  --bk-brown: #502314;
+  --bk-dark: #1a1008;
+  --bk-cream: #FFF8EE;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Barlow', sans-serif; background: var(--bk-dark); min-height: 100vh; color: var(--bk-cream); }
 
-  /* HEADER */
-  .header {
-    background: var(--bk-red);
-    padding: 14px 16px 12px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.4);
-  }
-  .burger-icon {
-    width: 48px;
-    height: 48px;
-    flex-shrink: 0;
-  }
-  .header-text {}
-  .header-title {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 22px;
-    font-weight: 900;
-    color: var(--bk-yellow);
-    line-height: 1;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-  }
-  .header-sub {
-    font-size: 12px;
-    font-weight: 500;
-    color: rgba(255,255,255,0.75);
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    margin-top: 2px;
-  }
+/* ---- SCREENS ---- */
+.screen { display: none; min-height: 100vh; flex-direction: column; }
+.screen.active { display: flex; }
 
-  /* AUDITOR INPUT */
-  .auditor-bar {
-    background: var(--bk-brown);
-    padding: 12px 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    border-bottom: 2px solid var(--bk-orange);
-  }
-  .auditor-bar label {
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: var(--bk-yellow);
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-  .auditor-bar input {
-    flex: 1;
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 6px;
-    padding: 7px 12px;
-    font-size: 14px;
-    font-family: 'Barlow', sans-serif;
-    font-weight: 500;
-    color: #fff;
-    outline: none;
-  }
-  .auditor-bar input::placeholder { color: rgba(255,255,255,0.35); }
-  .auditor-bar input:focus { border-color: var(--bk-yellow); background: rgba(255,255,255,0.15); }
+/* ---- AUTH SCREEN ---- */
+.auth-wrap {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px;
+}
+.auth-logo { text-align: center; margin-bottom: 32px; }
+.auth-logo svg { width: 64px; height: 64px; }
+.auth-logo h1 { font-family: 'Barlow Condensed', sans-serif; font-size: 30px; font-weight: 900; color: var(--bk-yellow); text-transform: uppercase; letter-spacing: 1px; margin-top: 8px; }
+.auth-logo p { font-size: 12px; color: rgba(255,255,255,0.5); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 4px; }
+.auth-card { background: #2a1506; border: 1.5px solid rgba(245,130,31,0.3); border-radius: 16px; padding: 24px; width: 100%; max-width: 360px; }
+.auth-tabs { display: flex; gap: 4px; margin-bottom: 20px; background: rgba(0,0,0,0.3); border-radius: 8px; padding: 4px; }
+.auth-tab { flex: 1; padding: 8px; text-align: center; font-size: 13px; font-weight: 600; border-radius: 6px; cursor: pointer; color: rgba(255,255,255,0.4); transition: all 0.2s; border: none; background: transparent; }
+.auth-tab.active { background: var(--bk-orange); color: var(--bk-dark); }
+.form-group { margin-bottom: 14px; }
+.form-group label { display: block; font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 6px; }
+.form-group input { width: 100%; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 10px 14px; font-size: 15px; font-family: 'Barlow', sans-serif; color: #fff; outline: none; }
+.form-group input:focus { border-color: var(--bk-orange); background: rgba(255,255,255,0.12); }
+.form-group input::placeholder { color: rgba(255,255,255,0.25); }
+.btn-primary { width: 100%; padding: 12px; background: var(--bk-orange); border: none; border-radius: 8px; font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 700; color: var(--bk-dark); text-transform: uppercase; letter-spacing: 1px; cursor: pointer; margin-top: 4px; transition: opacity 0.2s; }
+.btn-primary:active { opacity: 0.8; }
+.auth-error { background: rgba(214,35,0,0.2); border: 1px solid rgba(214,35,0,0.4); border-radius: 6px; padding: 10px 12px; font-size: 13px; color: #ff8a7a; margin-top: 12px; text-align: center; display: none; }
 
-  /* MAIN */
-  .main { padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+/* ---- BLOCKED SCREEN ---- */
+.blocked-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; text-align: center; }
+.blocked-icon { font-size: 48px; margin-bottom: 16px; }
+.blocked-wrap h2 { font-family: 'Barlow Condensed', sans-serif; font-size: 28px; font-weight: 900; color: var(--bk-yellow); text-transform: uppercase; margin-bottom: 8px; }
+.blocked-wrap p { font-size: 14px; color: rgba(255,255,255,0.6); margin-bottom: 24px; line-height: 1.6; }
+.price-badge { background: var(--bk-orange); color: var(--bk-dark); font-family: 'Barlow Condensed', sans-serif; font-size: 36px; font-weight: 900; padding: 12px 28px; border-radius: 12px; display: inline-block; margin-bottom: 24px; }
+.btn-paypal { display: block; width: 100%; max-width: 320px; padding: 14px; background: #0070ba; border: none; border-radius: 10px; font-family: 'Barlow Condensed', sans-serif; font-size: 20px; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; text-decoration: none; text-align: center; margin: 0 auto 16px; }
+.btn-logout-small { background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; padding: 8px 16px; font-size: 12px; color: rgba(255,255,255,0.4); cursor: pointer; margin-top: 8px; }
 
-  /* SECTION */
-  .section {
-    border-radius: 14px;
-    overflow: hidden;
-    background: #2a1506;
-    border: 1.5px solid rgba(245,130,31,0.3);
-  }
-  .section-header {
-    background: var(--bk-orange);
-    padding: 11px 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .section-title {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 20px;
-    font-weight: 900;
-    color: var(--bk-dark);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  .btn-add {
-    width: 30px; height: 30px;
-    border-radius: 50%;
-    background: var(--bk-dark);
-    border: none;
-    color: var(--bk-yellow);
-    font-size: 22px;
-    font-weight: 700;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    line-height: 1;
-    flex-shrink: 0;
-    transition: transform 0.15s;
-  }
-  .btn-add:active { transform: scale(0.9); }
+/* ---- HEADER ---- */
+.header { background: var(--bk-red); padding: 12px 16px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 10; box-shadow: 0 3px 12px rgba(0,0,0,0.4); }
+.burger-icon { width: 42px; height: 42px; flex-shrink: 0; }
+.header-text { flex: 1; }
+.header-title { font-family: 'Barlow Condensed', sans-serif; font-size: 20px; font-weight: 900; color: var(--bk-yellow); line-height: 1; text-transform: uppercase; }
+.header-sub { font-size: 11px; color: rgba(255,255,255,0.6); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+.header-actions { display: flex; gap: 8px; align-items: center; }
+.btn-header { background: rgba(0,0,0,0.25); border: none; border-radius: 6px; padding: 6px 10px; font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.8); cursor: pointer; letter-spacing: 0.5px; white-space: nowrap; }
+.trial-badge { background: var(--bk-yellow); color: var(--bk-dark); border-radius: 6px; padding: 4px 8px; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; white-space: nowrap; }
 
-  /* CHRONO LIST */
-  .chrono-list { display: flex; flex-direction: column; }
-  .empty {
-    padding: 20px;
-    text-align: center;
-    font-size: 13px;
-    color: rgba(255,248,238,0.3);
-    font-style: italic;
-  }
-  .chrono-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-  }
-  .chrono-row:last-child { border-bottom: none; }
-  .chrono-info { flex: 1; min-width: 0; }
-  .chrono-label {
-    font-size: 10px;
-    color: rgba(255,248,238,0.45);
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-    margin-bottom: 1px;
-  }
-  .chrono-time {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--bk-yellow);
-    letter-spacing: 2px;
-    line-height: 1;
-  }
-  .chrono-running .chrono-time { color: #fff; }
+/* ---- AUDITOR BAR ---- */
+.auditor-bar { background: var(--bk-brown); padding: 10px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 2px solid var(--bk-orange); }
+.auditor-bar label { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--bk-yellow); white-space: nowrap; flex-shrink: 0; }
+.auditor-bar input { flex: 1; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; padding: 6px 10px; font-size: 14px; font-family: 'Barlow', sans-serif; font-weight: 500; color: #fff; outline: none; }
+.auditor-bar input:focus { border-color: var(--bk-yellow); }
+.auditor-bar input::placeholder { color: rgba(255,255,255,0.3); }
 
-  .chrono-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-  .btn-circle {
-    width: 38px; height: 38px;
-    border-radius: 50%;
-    border: none;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 15px;
-    transition: transform 0.1s, opacity 0.1s;
-    flex-shrink: 0;
-  }
-  .btn-circle:active { transform: scale(0.88); }
-  .btn-reset { background: rgba(255,255,255,0.1); color: rgba(255,248,238,0.7); font-size: 18px; }
-  .btn-start { background: #22c55e; color: #fff; }
-  .btn-stop { background: var(--bk-red); color: #fff; }
-  .btn-delete { background: transparent; border: none; color: rgba(255,255,255,0.2); font-size: 16px; cursor: pointer; padding: 6px; }
-  .btn-delete:active { color: var(--bk-red); }
+/* ---- MAIN ---- */
+.main { padding: 14px; display: flex; flex-direction: column; gap: 14px; }
+.section { border-radius: 14px; overflow: hidden; background: #2a1506; border: 1.5px solid rgba(245,130,31,0.3); }
+.section-header { background: var(--bk-orange); padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; }
+.section-title { font-family: 'Barlow Condensed', sans-serif; font-size: 20px; font-weight: 900; color: var(--bk-dark); text-transform: uppercase; letter-spacing: 1px; }
+.btn-add { width: 30px; height: 30px; border-radius: 50%; background: var(--bk-dark); border: none; color: var(--bk-yellow); font-size: 22px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.15s; }
+.btn-add:active { transform: scale(0.88); }
+.chrono-list { display: flex; flex-direction: column; }
+.empty { padding: 18px; text-align: center; font-size: 13px; color: rgba(255,248,238,0.3); font-style: italic; }
+.chrono-row { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.chrono-row:last-child { border-bottom: none; }
+.chrono-info { flex: 1; min-width: 0; }
+.chrono-label { font-size: 10px; color: rgba(255,248,238,0.4); letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 2px; }
+.chrono-order-input { display: flex; align-items: center; gap: 6px; margin: 3px 0; }
+.chrono-order-input label { font-size: 10px; color: rgba(255,248,238,0.4); letter-spacing: 0.8px; text-transform: uppercase; white-space: nowrap; flex-shrink: 0; }
+.chrono-order-input input { width: 100px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 5px; padding: 3px 8px; font-size: 13px; font-family: 'Barlow', sans-serif; font-weight: 600; color: var(--bk-yellow); outline: none; }
+.chrono-order-input input:focus { border-color: var(--bk-orange); }
+.chrono-order-input input::placeholder { color: rgba(255,255,255,0.2); font-weight: 400; }
+.chrono-time { font-family: 'Barlow Condensed', sans-serif; font-size: 28px; font-weight: 700; color: var(--bk-yellow); letter-spacing: 2px; line-height: 1; }
+.chrono-running .chrono-time { color: #fff; }
+.chrono-actions { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
+.btn-circle { width: 36px; height: 36px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; transition: transform 0.1s; flex-shrink: 0; }
+.btn-circle:active { transform: scale(0.88); }
+.btn-reset { background: rgba(255,255,255,0.1); color: rgba(255,248,238,0.7); font-size: 17px; }
+.btn-start { background: #22c55e; color: #fff; }
+.btn-stop { background: var(--bk-red); color: #fff; }
+.btn-delete { background: transparent; border: none; color: rgba(255,255,255,0.2); font-size: 15px; cursor: pointer; padding: 5px; }
+.btn-delete:active { color: var(--bk-red); }
+.footer { text-align: center; padding: 16px 16px 32px; font-size: 11px; color: rgba(255,248,238,0.15); letter-spacing: 1px; text-transform: uppercase; }
 
-  /* ORDER NUMBER */
-  .chrono-order-input {
-    margin-top: 5px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .chrono-order-input label {
-    font-size: 10px;
-    color: rgba(255,248,238,0.4);
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-  .chrono-order-input input {
-    width: 90px;
-    background: rgba(255,255,255,0.07);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 5px;
-    padding: 3px 8px;
-    font-size: 13px;
-    font-family: 'Barlow', sans-serif;
-    font-weight: 600;
-    color: var(--bk-yellow);
-    outline: none;
-    letter-spacing: 0.5px;
-  }
-  .chrono-order-input input::placeholder { color: rgba(255,255,255,0.2); font-weight: 400; }
-  .chrono-order-input input:focus { border-color: var(--bk-orange); background: rgba(255,255,255,0.12); }
-
-  /* FOOTER */
-  .footer {
-    text-align: center;
-    padding: 18px 16px 32px;
-    font-size: 11px;
-    color: rgba(255,248,238,0.2);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-  }
+/* ---- ADMIN SCREEN ---- */
+.admin-header { background: #1a1008; border-bottom: 2px solid var(--bk-orange); padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; }
+.admin-header h1 { font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 900; color: var(--bk-yellow); text-transform: uppercase; }
+.admin-content { padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+.admin-card { background: #2a1506; border: 1.5px solid rgba(245,130,31,0.3); border-radius: 12px; padding: 16px; }
+.admin-card h2 { font-family: 'Barlow Condensed', sans-serif; font-size: 17px; font-weight: 700; color: var(--bk-orange); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
+.price-form { display: flex; align-items: center; gap: 10px; }
+.price-form input { flex: 1; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 10px 14px; font-size: 20px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; color: var(--bk-yellow); outline: none; width: 120px; }
+.price-form input:focus { border-color: var(--bk-orange); }
+.price-form span { font-size: 14px; color: rgba(255,255,255,0.5); }
+.btn-save { background: var(--bk-orange); border: none; border-radius: 8px; padding: 10px 18px; font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 700; color: var(--bk-dark); text-transform: uppercase; cursor: pointer; }
+.btn-save:active { opacity: 0.8; }
+.save-ok { font-size: 12px; color: #22c55e; margin-top: 6px; display: none; }
+.user-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.user-table th { text-align: left; font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.4); padding: 0 0 8px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.user-table td { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); vertical-align: middle; }
+.user-table tr:last-child td { border-bottom: none; }
+.status-badge { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; letter-spacing: 0.5px; }
+.status-trial { background: rgba(255,205,0,0.2); color: var(--bk-yellow); }
+.status-active { background: rgba(34,197,94,0.2); color: #22c55e; }
+.status-blocked { background: rgba(214,35,0,0.2); color: #ff6b5b; }
+.btn-toggle { border: none; border-radius: 5px; padding: 5px 10px; font-size: 11px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+.btn-activate { background: rgba(34,197,94,0.2); color: #22c55e; }
+.btn-block { background: rgba(214,35,0,0.2); color: #ff6b5b; }
+.no-users { text-align: center; font-size: 13px; color: rgba(255,255,255,0.3); font-style: italic; padding: 20px 0; }
+.loading { text-align: center; padding: 20px; color: rgba(255,255,255,0.3); font-size: 13px; }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
-<div class="header">
-  <svg class="burger-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <!-- bun top -->
-    <ellipse cx="24" cy="13" rx="18" ry="8" fill="#E8812A"/>
-    <ellipse cx="24" cy="10" rx="17" ry="6" fill="#F5A63D"/>
-    <!-- sesame seeds -->
-    <ellipse cx="18" cy="9" rx="2" ry="1" fill="#C96C1A" transform="rotate(-15 18 9)"/>
-    <ellipse cx="26" cy="7.5" rx="2" ry="1" fill="#C96C1A" transform="rotate(10 26 7.5)"/>
-    <ellipse cx="32" cy="10" rx="2" ry="1" fill="#C96C1A" transform="rotate(-5 32 10)"/>
-    <!-- lettuce -->
-    <path d="M6 20 Q12 17 18 20 Q24 23 30 20 Q36 17 42 20 L42 22 Q36 19 30 22 Q24 25 18 22 Q12 19 6 22 Z" fill="#4CAF50"/>
-    <!-- cheese -->
-    <path d="M7 22 L41 22 L43 25 L5 25 Z" fill="#FFCD00"/>
-    <!-- patty -->
-    <rect x="6" y="25" width="36" height="8" rx="2" fill="#6B2D0A"/>
-    <rect x="6" y="25" width="36" height="3" rx="1" fill="#7D3510"/>
-    <!-- tomato -->
-    <rect x="6" y="33" width="36" height="3" rx="1" fill="#D62300" opacity="0.9"/>
-    <!-- bun bottom -->
-    <ellipse cx="24" cy="38" rx="18" ry="6" fill="#E8812A"/>
-    <ellipse cx="24" cy="37" rx="18" ry="5" fill="#F5A63D"/>
-  </svg>
-  <div class="header-text">
-    <div class="header-title">Chronos Burger King</div>
-    <div class="header-sub">Suivi des temps d'audit</div>
+<!-- AUTH SCREEN -->
+<div class="screen active" id="screen-auth">
+  <div class="auth-wrap">
+    <div class="auth-logo">
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="32" cy="17" rx="24" ry="10" fill="#E8812A"/>
+        <ellipse cx="32" cy="13" rx="22" ry="8" fill="#F5A63D"/>
+        <ellipse cx="24" cy="12" rx="2.5" ry="1.2" fill="#C96C1A" transform="rotate(-15 24 12)"/>
+        <ellipse cx="34" cy="10" rx="2.5" ry="1.2" fill="#C96C1A" transform="rotate(10 34 10)"/>
+        <ellipse cx="42" cy="13" rx="2.5" ry="1.2" fill="#C96C1A" transform="rotate(-5 42 13)"/>
+        <path d="M8 27 Q16 23 24 27 Q32 31 40 27 Q48 23 56 27 L56 30 Q48 26 40 30 Q32 34 24 30 Q16 26 8 30 Z" fill="#4CAF50"/>
+        <path d="M9 30 L55 30 L57 34 L7 34 Z" fill="#FFCD00"/>
+        <rect x="8" y="34" width="48" height="10" rx="2" fill="#6B2D0A"/>
+        <rect x="8" y="34" width="48" height="4" rx="1" fill="#7D3510"/>
+        <rect x="8" y="44" width="48" height="4" rx="1" fill="#D62300" opacity="0.9"/>
+        <ellipse cx="32" cy="51" rx="24" ry="8" fill="#E8812A"/>
+        <ellipse cx="32" cy="50" rx="24" ry="7" fill="#F5A63D"/>
+      </svg>
+      <h1>BK Chronos</h1>
+      <p>Suivi des temps d'audit</p>
+    </div>
+    <div class="auth-card">
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="switchTab('login')">Connexion</button>
+        <button class="auth-tab" onclick="switchTab('register')">Inscription</button>
+      </div>
+      <div id="tab-login">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="login-email" placeholder="votre@email.com" autocomplete="email"/>
+        </div>
+        <div class="form-group">
+          <label>Mot de passe</label>
+          <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password"/>
+        </div>
+        <button class="btn-primary" onclick="doLogin()">Se connecter</button>
+      </div>
+      <div id="tab-register" style="display:none">
+        <div class="form-group">
+          <label>Nom complet</label>
+          <input type="text" id="reg-name" placeholder="Prénom Nom"/>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="reg-email" placeholder="votre@email.com" autocomplete="email"/>
+        </div>
+        <div class="form-group">
+          <label>Mot de passe</label>
+          <input type="password" id="reg-password" placeholder="Min. 6 caractères" autocomplete="new-password"/>
+        </div>
+        <button class="btn-primary" onclick="doRegister()">Créer mon compte</button>
+      </div>
+      <div class="auth-error" id="auth-error"></div>
+    </div>
   </div>
 </div>
 
-<!-- AUDITOR NAME -->
-<div class="auditor-bar">
-  <label>Auditeur</label>
-  <input type="text" id="auditor-name" placeholder="Nom de l'auditeur..." />
+<!-- BLOCKED SCREEN -->
+<div class="screen" id="screen-blocked">
+  <div class="blocked-wrap">
+    <div class="blocked-icon">🔒</div>
+    <h2>Période d'essai terminée</h2>
+    <p>Votre essai gratuit de 30 jours est écoulé.<br>Abonnez-vous pour continuer à utiliser BK Chronos.</p>
+    <div class="price-badge" id="blocked-price">2,99€/mois</div>
+    <a id="paypal-link" href="https://www.paypal.com/paypalme/bkteamauditeur" target="_blank" class="btn-paypal">💳 Payer via PayPal</a>
+    <p style="font-size:12px;color:rgba(255,255,255,0.35);max-width:280px;line-height:1.5;">Après paiement, votre accès sera activé manuellement sous 24h.</p>
+    <button class="btn-logout-small" onclick="doLogout()">Se déconnecter</button>
+  </div>
 </div>
 
-<!-- MAIN CONTENT -->
-<div class="main">
-
-  <div class="section">
-    <div class="section-header">
-      <span class="section-title">Comptoir</span>
-      <button class="btn-add" onclick="addChrono('comptoir')" title="Ajouter un chrono">+</button>
+<!-- MAIN APP SCREEN -->
+<div class="screen" id="screen-app">
+  <div class="header">
+    <svg class="burger-icon" viewBox="0 0 48 48" fill="none">
+      <ellipse cx="24" cy="13" rx="18" ry="8" fill="#E8812A"/>
+      <ellipse cx="24" cy="10" rx="17" ry="6" fill="#F5A63D"/>
+      <ellipse cx="18" cy="9" rx="2" ry="1" fill="#C96C1A" transform="rotate(-15 18 9)"/>
+      <ellipse cx="26" cy="7.5" rx="2" ry="1" fill="#C96C1A" transform="rotate(10 26 7.5)"/>
+      <ellipse cx="32" cy="10" rx="2" ry="1" fill="#C96C1A" transform="rotate(-5 32 10)"/>
+      <path d="M6 20 Q12 17 18 20 Q24 23 30 20 Q36 17 42 20 L42 22 Q36 19 30 22 Q24 25 18 22 Q12 19 6 22 Z" fill="#4CAF50"/>
+      <path d="M7 22 L41 22 L43 25 L5 25 Z" fill="#FFCD00"/>
+      <rect x="6" y="25" width="36" height="8" rx="2" fill="#6B2D0A"/>
+      <rect x="6" y="25" width="36" height="3" rx="1" fill="#7D3510"/>
+      <rect x="6" y="33" width="36" height="3" rx="1" fill="#D62300" opacity="0.9"/>
+      <ellipse cx="24" cy="38" rx="18" ry="6" fill="#E8812A"/>
+      <ellipse cx="24" cy="37" rx="18" ry="5" fill="#F5A63D"/>
+    </svg>
+    <div class="header-text">
+      <div class="header-title">BK Chronos</div>
+      <div class="header-sub" id="header-user">—</div>
     </div>
-    <div class="chrono-list" id="list-comptoir">
-      <div class="empty">Appuyez sur + pour démarrer un chrono</div>
+    <div class="header-actions">
+      <span class="trial-badge" id="trial-info" style="display:none"></span>
+      <button class="btn-header" onclick="doLogout()">Déco.</button>
     </div>
   </div>
 
-  <div class="section">
-    <div class="section-header">
-      <span class="section-title">Drive</span>
-      <button class="btn-add" onclick="addChrono('drive')" title="Ajouter un chrono">+</button>
-    </div>
-    <div class="chrono-list" id="list-drive">
-      <div class="empty">Appuyez sur + pour démarrer un chrono</div>
-    </div>
+  <div class="auditor-bar">
+    <label>Auditeur</label>
+    <input type="text" id="auditor-name" placeholder="Nom de l'auditeur..."/>
   </div>
 
+  <div class="main">
+    <div class="section">
+      <div class="section-header">
+        <span class="section-title">Comptoir</span>
+        <button class="btn-add" onclick="addChrono('comptoir')">+</button>
+      </div>
+      <div class="chrono-list" id="list-comptoir">
+        <div class="empty">Appuyez sur + pour démarrer un chrono</div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">
+        <span class="section-title">Drive</span>
+        <button class="btn-add" onclick="addChrono('drive')">+</button>
+      </div>
+      <div class="chrono-list" id="list-drive">
+        <div class="empty">Appuyez sur + pour démarrer un chrono</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">BK Chronos — Audit Tool</div>
 </div>
 
-<div class="footer">Burger King Audit Tool</div>
+<!-- ADMIN SCREEN -->
+<div class="screen" id="screen-admin">
+  <div class="admin-header">
+    <h1>Dashboard Admin</h1>
+    <button class="btn-header" onclick="doLogout()" style="background:rgba(214,35,0,0.3);color:#ff8a7a;">Déco.</button>
+  </div>
+  <div class="admin-content">
 
-<script>
+    <div class="admin-card">
+      <h2>Prix de l'abonnement</h2>
+      <div class="price-form">
+        <input type="number" id="admin-price" step="0.01" min="0" placeholder="2.99"/>
+        <span>€ / mois</span>
+        <button class="btn-save" onclick="savePrice()">Enregistrer</button>
+      </div>
+      <div class="save-ok" id="price-saved">✓ Prix mis à jour</div>
+    </div>
+
+    <div class="admin-card">
+      <h2>Utilisateurs</h2>
+      <div id="users-loading" class="loading">Chargement...</div>
+      <table class="user-table" id="users-table" style="display:none">
+        <thead>
+          <tr>
+            <th>Nom / Email</th>
+            <th>Statut</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="users-tbody"></tbody>
+      </table>
+      <div class="no-users" id="no-users" style="display:none">Aucun utilisateur inscrit</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FIREBASE SDKs -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBhen95nMD1gA7SjGTGp66wPtSAtG7HP4w",
+  authDomain: "bk-chronos.firebaseapp.com",
+  projectId: "bk-chronos",
+  storageBucket: "bk-chronos.firebasestorage.app",
+  messagingSenderId: "120686435589",
+  appId: "1:120686435589:web:b5db42ca9eecc2075ceb6c"
+};
+
+const ADMIN_EMAIL = "cevapizza11@gmail.com";
+const TRIAL_DAYS = 30;
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// ---- CHRONO STATE ----
 const state = { comptoir: [], drive: [] };
 let idCounter = 0;
 
-function pad(n) { return String(n).padStart(2, '0'); }
-
+function pad(n) { return String(n).padStart(2,'0'); }
 function formatTime(ms) {
-  const h = Math.floor(ms / 3600000);
-  const m = Math.floor((ms % 3600000) / 60000);
-  const s = Math.floor((ms % 60000) / 1000);
-  return pad(h) + ':' + pad(m) + ':' + pad(s);
+  const h = Math.floor(ms/3600000), m = Math.floor((ms%3600000)/60000), s = Math.floor((ms%60000)/1000);
+  return pad(h)+':'+pad(m)+':'+pad(s);
 }
-
 function formatDate(d) {
-  const day = pad(d.getDate()), mon = pad(d.getMonth()+1), yr = String(d.getFullYear()).slice(2);
-  const h = pad(d.getHours()), min = pad(d.getMinutes());
-  return day + '/' + mon + '/' + yr + ' ' + h + ':' + min;
+  return pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+String(d.getFullYear()).slice(2)+' '+pad(d.getHours())+':'+pad(d.getMinutes());
 }
 
-function addChrono(section) {
+window.addChrono = function(section) {
   const id = ++idCounter;
-  const entry = { id, section, elapsed: 0, running: false, startedAt: null, interval: null, createdAt: new Date(), orderNum: '' };
-  state[section].push(entry);
-  render(section);
-}
+  state[section].push({ id, section, elapsed:0, running:false, startedAt:null, interval:null, createdAt:new Date(), orderNum:'' });
+  renderChrono(section);
+};
+window.toggleChrono = function(section, id) {
+  const e = state[section].find(x=>x.id===id); if(!e) return;
+  if(!e.running) {
+    if(e.elapsed===0) e.createdAt=new Date();
+    e.startedAt=Date.now()-e.elapsed; e.running=true;
+    e.interval=setInterval(()=>{ e.elapsed=Date.now()-e.startedAt; const el=document.getElementById('time-'+id); if(el) el.textContent=formatTime(e.elapsed); },100);
+  } else { clearInterval(e.interval); e.running=false; }
+  renderChrono(section);
+};
+window.resetChrono = function(section, id) {
+  const e = state[section].find(x=>x.id===id); if(!e) return;
+  clearInterval(e.interval); e.elapsed=0; e.running=false; e.startedAt=null; e.createdAt=new Date();
+  renderChrono(section);
+};
+window.deleteChrono = function(section, id) {
+  const e = state[section].find(x=>x.id===id); if(e) clearInterval(e.interval);
+  state[section]=state[section].filter(x=>x.id!==id);
+  renderChrono(section);
+};
+window.updateOrder = function(section, id, val) {
+  const e = state[section].find(x=>x.id===id); if(e) e.orderNum=val;
+};
 
-function updateOrder(section, id, val) {
-  const e = state[section].find(x => x.id === id);
-  if (e) e.orderNum = val;
-}
-
-function toggleChrono(section, id) {
-  const e = state[section].find(x => x.id === id);
-  if (!e) return;
-  if (!e.running) {
-    if (e.elapsed === 0) e.createdAt = new Date();
-    e.startedAt = Date.now() - e.elapsed;
-    e.running = true;
-    e.interval = setInterval(() => {
-      e.elapsed = Date.now() - e.startedAt;
-      const el = document.getElementById('time-' + id);
-      if (el) el.textContent = formatTime(e.elapsed);
-    }, 100);
-  } else {
-    clearInterval(e.interval);
-    e.running = false;
-  }
-  render(section);
-}
-
-function resetChrono(section, id) {
-  const e = state[section].find(x => x.id === id);
-  if (!e) return;
-  clearInterval(e.interval);
-  e.elapsed = 0;
-  e.running = false;
-  e.startedAt = null;
-  e.createdAt = new Date();
-  render(section);
-}
-
-function deleteChrono(section, id) {
-  const e = state[section].find(x => x.id === id);
-  if (e) clearInterval(e.interval);
-  state[section] = state[section].filter(x => x.id !== id);
-  render(section);
-}
-
-function render(section) {
-  const list = document.getElementById('list-' + section);
+function renderChrono(section) {
+  const list = document.getElementById('list-'+section);
   const entries = state[section];
-  if (!entries.length) {
-    list.innerHTML = '<div class="empty">Appuyez sur + pour démarrer un chrono</div>';
-    return;
-  }
-  list.innerHTML = entries.map((e, i) => {
-    const label = formatDate(e.createdAt);
-    const time = formatTime(e.elapsed);
-    const orderVal = (e.orderNum || '').replace(/"/g, '&quot;');
-    return '<div class="chrono-row' + (e.running ? ' chrono-running' : '') + '">' +
+  if(!entries.length) { list.innerHTML='<div class="empty">Appuyez sur + pour démarrer un chrono</div>'; return; }
+  list.innerHTML = entries.map((e,i) => {
+    const orderVal = (e.orderNum||'').replace(/"/g,'&quot;');
+    return '<div class="chrono-row'+(e.running?' chrono-running':'')+'">' +
       '<div class="chrono-info">' +
-        '<div class="chrono-label">Chrono ' + (i+1) + ' &nbsp;·&nbsp; ' + label + '</div>' +
-        '<div class="chrono-order-input">' +
-          '<label>Cmd #</label>' +
-          '<input type="text" inputmode="numeric" placeholder="N° commande" value="' + orderVal + '" ' +
-            'oninput="updateOrder(\'' + section + '\',' + e.id + ',this.value)" />' +
-        '</div>' +
-        '<div class="chrono-time" id="time-' + e.id + '">' + time + '</div>' +
+        '<div class="chrono-label">Chrono '+(i+1)+' &nbsp;·&nbsp; '+formatDate(e.createdAt)+'</div>' +
+        '<div class="chrono-order-input"><label>Cmd #</label>' +
+        '<input type="text" inputmode="numeric" placeholder="N° commande" value="'+orderVal+'" oninput="updateOrder(\''+section+'\','+e.id+',this.value)"/></div>' +
+        '<div class="chrono-time" id="time-'+e.id+'">'+formatTime(e.elapsed)+'</div>' +
       '</div>' +
       '<div class="chrono-actions">' +
-        '<button class="btn-circle btn-reset" onclick="resetChrono(\'' + section + '\',' + e.id + ')" title="Réinitialiser">↺</button>' +
-        '<button class="btn-circle ' + (e.running ? 'btn-stop' : 'btn-start') + '" onclick="toggleChrono(\'' + section + '\',' + e.id + ')">' +
-          (e.running ? '■' : '▶') +
-        '</button>' +
-        '<button class="btn-delete" onclick="deleteChrono(\'' + section + '\',' + e.id + ')">✕</button>' +
-      '</div>' +
-    '</div>';
+        '<button class="btn-circle btn-reset" onclick="resetChrono(\''+section+'\','+e.id+')">↺</button>' +
+        '<button class="btn-circle '+(e.running?'btn-stop':'btn-start')+'" onclick="toggleChrono(\''+section+'\','+e.id+')">'+(e.running?'■':'▶')+'</button>' +
+        '<button class="btn-delete" onclick="deleteChrono(\''+section+'\','+e.id+')">✕</button>' +
+      '</div></div>';
   }).join('');
 }
+
+// ---- SCREENS ----
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+}
+
+// ---- AUTH ----
+window.switchTab = function(tab) {
+  document.getElementById('tab-login').style.display = tab==='login'?'block':'none';
+  document.getElementById('tab-register').style.display = tab==='register'?'block':'none';
+  document.querySelectorAll('.auth-tab').forEach((t,i)=>t.classList.toggle('active',(tab==='login'&&i===0)||(tab==='register'&&i===1)));
+  document.getElementById('auth-error').style.display='none';
+};
+
+function showError(msg) {
+  const el = document.getElementById('auth-error');
+  el.textContent = msg; el.style.display='block';
+}
+
+window.doLogin = async function() {
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  if(!email||!password) return showError('Veuillez remplir tous les champs.');
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch(e) {
+    showError('Email ou mot de passe incorrect.');
+  }
+};
+
+window.doRegister = async function() {
+  const name = document.getElementById('reg-name').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const password = document.getElementById('reg-password').value;
+  if(!name||!email||!password) return showError('Veuillez remplir tous les champs.');
+  if(password.length<6) return showError('Le mot de passe doit faire au moins 6 caractères.');
+  try {
+    const cred = await createUserWithEmailAndPassword(auth, email, password);
+    await updateProfile(cred.user, { displayName: name });
+    await setDoc(doc(db,'users',cred.user.uid), {
+      name, email, status:'trial', trialStart: Date.now(), createdAt: serverTimestamp()
+    });
+  } catch(e) {
+    if(e.code==='auth/email-already-in-use') showError('Cet email est déjà utilisé.');
+    else showError('Erreur lors de la création du compte.');
+  }
+};
+
+window.doLogout = async function() {
+  Object.keys(state).forEach(s=>{ state[s].forEach(e=>clearInterval(e.interval)); state[s]=[]; });
+  await signOut(auth);
+  showScreen('auth');
+};
+
+// ---- AUTH STATE ----
+onAuthStateChanged(auth, async (user) => {
+  if(!user) { showScreen('auth'); return; }
+
+  // ADMIN
+  if(user.email === ADMIN_EMAIL) {
+    showScreen('admin');
+    loadAdminData();
+    return;
+  }
+
+  // NORMAL USER
+  const ref = doc(db,'users',user.uid);
+  let snap = await getDoc(ref);
+  if(!snap.exists()) {
+    await setDoc(ref, { name: user.displayName||user.email, email:user.email, status:'trial', trialStart: Date.now(), createdAt: serverTimestamp() });
+    snap = await getDoc(ref);
+  }
+  const data = snap.data();
+
+  // Check trial expiry
+  if(data.status==='trial') {
+    const elapsed = Date.now() - data.trialStart;
+    const daysLeft = TRIAL_DAYS - Math.floor(elapsed / 86400000);
+    if(daysLeft <= 0) {
+      await updateDoc(ref, { status:'blocked' });
+      showBlockedScreen();
+    } else {
+      showAppScreen(user, data, daysLeft);
+    }
+  } else if(data.status==='active') {
+    showAppScreen(user, data, null);
+  } else {
+    showBlockedScreen();
+  }
+});
+
+async function showBlockedScreen() {
+  // Load current price
+  const priceSnap = await getDoc(doc(db,'settings','pricing'));
+  const price = priceSnap.exists() ? priceSnap.data().price : 2.99;
+  document.getElementById('blocked-price').textContent = price.toFixed(2).replace('.',',') + '€/mois';
+  showScreen('blocked');
+}
+
+function showAppScreen(user, data, daysLeft) {
+  document.getElementById('header-user').textContent = data.name || user.email;
+  const trialInfo = document.getElementById('trial-info');
+  if(daysLeft !== null) {
+    trialInfo.textContent = daysLeft + 'j d\'essai';
+    trialInfo.style.display = 'inline-block';
+  } else {
+    trialInfo.style.display = 'none';
+  }
+  showScreen('app');
+}
+
+// ---- ADMIN ----
+async function loadAdminData() {
+  // Load price
+  const priceSnap = await getDoc(doc(db,'settings','pricing'));
+  const price = priceSnap.exists() ? priceSnap.data().price : 2.99;
+  document.getElementById('admin-price').value = price.toFixed(2);
+
+  // Load users
+  const usersSnap = await getDocs(collection(db,'users'));
+  const tbody = document.getElementById('users-tbody');
+  document.getElementById('users-loading').style.display='none';
+
+  if(usersSnap.empty) {
+    document.getElementById('no-users').style.display='block';
+    return;
+  }
+  document.getElementById('users-table').style.display='table';
+
+  tbody.innerHTML = '';
+  usersSnap.forEach(d => {
+    const u = d.data();
+    if(u.email === ADMIN_EMAIL) return;
+    const daysLeft = u.status==='trial' ? Math.max(0, TRIAL_DAYS - Math.floor((Date.now()-u.trialStart)/86400000)) : null;
+    const statusLabel = u.status==='trial' ? `<span class="status-badge status-trial">Essai (${daysLeft}j)</span>`
+      : u.status==='active' ? `<span class="status-badge status-active">Actif</span>`
+      : `<span class="status-badge status-blocked">Bloqué</span>`;
+    const actionBtn = u.status==='active'
+      ? `<button class="btn-toggle btn-block" onclick="toggleUser('${d.id}','blocked')">Bloquer</button>`
+      : `<button class="btn-toggle btn-activate" onclick="toggleUser('${d.id}','active')">Activer</button>`;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td><div style="font-weight:600;font-size:13px">${u.name||'—'}</div><div style="font-size:11px;color:rgba(255,255,255,0.4)">${u.email}</div></td><td>${statusLabel}</td><td>${actionBtn}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+window.toggleUser = async function(uid, newStatus) {
+  await updateDoc(doc(db,'users',uid), { status: newStatus });
+  document.getElementById('users-loading').style.display='block';
+  document.getElementById('users-table').style.display='none';
+  document.getElementById('no-users').style.display='none';
+  loadAdminData();
+};
+
+window.savePrice = async function() {
+  const val = parseFloat(document.getElementById('admin-price').value);
+  if(isNaN(val)||val<=0) return;
+  await setDoc(doc(db,'settings','pricing'), { price: val });
+  const ok = document.getElementById('price-saved');
+  ok.style.display='block';
+  setTimeout(()=>ok.style.display='none', 2500);
+};
+
 </script>
 </body>
 </html>
