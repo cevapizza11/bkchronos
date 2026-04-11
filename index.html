@@ -192,7 +192,7 @@ body { font-family: 'Barlow', sans-serif; background: var(--bk-dark); min-height
     <h2>Période d'essai terminée</h2>
     <p>Votre essai gratuit de 30 jours est écoulé.<br>Abonnez-vous pour continuer à utiliser BK Chronos.</p>
     <div class="price-badge" id="blocked-price">2,99€/mois</div>
-    <a id="paypal-link" href="https://www.paypal.com/paypalme/bkteamauditeur" target="_blank" class="btn-paypal">💳 Payer via PayPal</a>
+    <a id="paypal-link" href="https://www.paypal.com/paypalme/bkteamauditeur" target="_blank" rel="noopener noreferrer" class="btn-paypal" onclick="openPayPal(event)">💳 Payer via PayPal</a>
     <p style="font-size:12px;color:rgba(255,255,255,0.35);max-width:280px;line-height:1.5;">Après paiement, votre accès sera activé manuellement sous 24h.</p>
     <button class="btn-logout-small" onclick="doLogout()">Se déconnecter</button>
   </div>
@@ -225,11 +225,9 @@ body { font-family: 'Barlow', sans-serif; background: var(--bk-dark); min-height
     </div>
   </div>
 
-  <div class="auditor-bar">
-    <label>Auditeur</label>
-    <input type="text" id="auditor-name" placeholder="Nom de l'auditeur..."/>
-  </div>
 
+
+  <input type="hidden" id="auditor-name"/>
   <div class="main">
     <div class="section">
       <div class="section-header">
@@ -476,6 +474,8 @@ async function showBlockedScreen() {
 
 function showAppScreen(user, data, daysLeft) {
   document.getElementById('header-user').textContent = data.name || user.email;
+  const auditEl = document.getElementById('auditor-name');
+  if(auditEl) auditEl.value = data.name || '';
   const trialInfo = document.getElementById('trial-info');
   if(daysLeft !== null) {
     trialInfo.textContent = daysLeft + 'j d\'essai';
@@ -538,6 +538,12 @@ window.savePrice = async function() {
   setTimeout(()=>ok.style.display='none', 2500);
 };
 
+
+window.openPayPal = function(e) {
+  e.preventDefault();
+  const url = document.getElementById('paypal-link').href;
+  window.location.href = url;
+};
 </script>
 </body>
 </html>
