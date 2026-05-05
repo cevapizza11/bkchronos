@@ -326,32 +326,68 @@ function formatDate(d) {
   return pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+String(d.getFullYear()).slice(2)+' '+pad(d.getHours())+':'+pad(d.getMinutes());
 }
 
+// ---- LOCAL STORAGE ----
+function saveState() {
+  const toSave = {};
+  ['comptoir','drive'].forEach(s => {
+    toSave[s] = state[s].map(e => ({
+      id: e.id, elapsed: e.elapsed, running: false,
+      createdAt: e.createdAt.getTime(), orderNum: e.orderNum || ''
+    }));
+  });
+  try { localStorage.setItem('bkchronos_state', JSON.stringify(toSave)); } catch(e) {}
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem('bkchronos_state');
+    if(!raw) return;
+    const saved = JSON.parse(raw);
+    ['comptoir','drive'].forEach(s => {
+      if(!saved[s]) return;
+      saved[s].forEach(e => {
+        if(e.id > idCounter) idCounter = e.id;
+        state[s].push({
+          id: e.id, section: s, elapsed: e.elapsed, running: false,
+          startedAt: null, interval: null,
+          createdAt: new Date(e.createdAt), orderNum: e.orderNum || ''
+        });
+      });
+      renderChrono(s);
+    });
+  } catch(e) {}
+}
+
 window.addChrono = function(section) {
   const id = ++idCounter;
   state[section].push({ id, section, elapsed:0, running:false, startedAt:null, interval:null, createdAt:new Date(), orderNum:'' });
   renderChrono(section);
+  saveState();
 };
 window.toggleChrono = function(section, id) {
   const e = state[section].find(x=>x.id===id); if(!e) return;
   if(!e.running) {
     if(e.elapsed===0) e.createdAt=new Date();
     e.startedAt=Date.now()-e.elapsed; e.running=true;
-    e.interval=setInterval(()=>{ e.elapsed=Date.now()-e.startedAt; const el=document.getElementById('time-'+id); if(el) el.textContent=formatTime(e.elapsed); },100);
+    let tickCount=0; e.interval=setInterval(()=>{ e.elapsed=Date.now()-e.startedAt; const el=document.getElementById('time-'+id); if(el) el.textContent=formatTime(e.elapsed); tickCount++; if(tickCount%10===0) saveState(); },100);
   } else { clearInterval(e.interval); e.running=false; }
   renderChrono(section);
+  saveState();
 };
 window.resetChrono = function(section, id) {
   const e = state[section].find(x=>x.id===id); if(!e) return;
   clearInterval(e.interval); e.elapsed=0; e.running=false; e.startedAt=null; e.createdAt=new Date();
   renderChrono(section);
+  saveState();
 };
 window.deleteChrono = function(section, id) {
   const e = state[section].find(x=>x.id===id); if(e) clearInterval(e.interval);
   state[section]=state[section].filter(x=>x.id!==id);
   renderChrono(section);
+  saveState();
 };
 window.updateOrder = function(section, id, val) {
-  const e = state[section].find(x=>x.id===id); if(e) e.orderNum=val;
+  const e = state[section].find(x=>x.id===id); if(e) { e.orderNum=val; saveState(); }
 };
 
 function updateAvg(section, entries) {
@@ -435,6 +471,7 @@ window.doRegister = async function() {
 
 window.doLogout = async function() {
   Object.keys(state).forEach(s=>{ state[s].forEach(e=>clearInterval(e.interval)); state[s]=[]; });
+  try { localStorage.removeItem('bkchronos_state'); } catch(e) {}
   await signOut(auth);
   showScreen('auth');
 };
@@ -497,6 +534,7 @@ function showAppScreen(user, data, daysLeft) {
     trialInfo.style.display = 'none';
   }
   showScreen('app');
+  loadState();
 }
 
 // ---- ADMIN ----
