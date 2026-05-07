@@ -74,6 +74,10 @@ body { font-family: 'Barlow', sans-serif; background: var(--bk-dark); min-height
 .section-header { background: var(--bk-orange); padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; }
 .section-title { font-family: 'Barlow Condensed', sans-serif; font-size: 20px; font-weight: 900; color: var(--bk-dark); text-transform: uppercase; letter-spacing: 1px; }
 .section-avg { font-family: 'Barlow Condensed', sans-serif; font-size: 15px; font-weight: 700; color: var(--bk-dark); background: rgba(0,0,0,0.18); border-radius: 6px; padding: 3px 8px; letter-spacing: 0.5px; flex: 1; text-align: center; }
+.btn-collapse { background: rgba(0,0,0,0.18); border: none; border-radius: 6px; padding: 3px 8px; font-size: 16px; color: var(--bk-dark); cursor: pointer; transition: transform 0.25s; flex-shrink: 0; line-height: 1; }
+.btn-collapse.collapsed { transform: rotate(-90deg); }
+.chrono-list-wrap { overflow: hidden; transition: max-height 0.3s ease; max-height: 2000px; }
+.chrono-list-wrap.collapsed { max-height: 0; }
 .btn-add { width: 30px; height: 30px; border-radius: 50%; background: var(--bk-dark); border: none; color: var(--bk-yellow); font-size: 22px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.15s; }
 .btn-add:active { transform: scale(0.88); }
 .chrono-list { display: flex; flex-direction: column; }
@@ -232,22 +236,28 @@ body { font-family: 'Barlow', sans-serif; background: var(--bk-dark); min-height
   <div class="main">
     <div class="section">
       <div class="section-header">
+        <button class="btn-collapse" id="collapse-comptoir" onclick="toggleCollapse('comptoir')" title="Réduire">▼</button>
         <span class="section-title">Comptoir</span>
         <span class="section-avg" id="avg-comptoir"></span>
         <button class="btn-add" onclick="addChrono('comptoir')">+</button>
       </div>
-      <div class="chrono-list" id="list-comptoir">
-        <div class="empty">Appuyez sur + pour démarrer un chrono</div>
+      <div class="chrono-list-wrap" id="wrap-comptoir">
+        <div class="chrono-list" id="list-comptoir">
+          <div class="empty">Appuyez sur + pour démarrer un chrono</div>
+        </div>
       </div>
     </div>
     <div class="section">
       <div class="section-header">
+        <button class="btn-collapse" id="collapse-drive" onclick="toggleCollapse('drive')" title="Réduire">▼</button>
         <span class="section-title">Drive</span>
         <span class="section-avg" id="avg-drive"></span>
         <button class="btn-add" onclick="addChrono('drive')">+</button>
       </div>
-      <div class="chrono-list" id="list-drive">
-        <div class="empty">Appuyez sur + pour démarrer un chrono</div>
+      <div class="chrono-list-wrap" id="wrap-drive">
+        <div class="chrono-list" id="list-drive">
+          <div class="empty">Appuyez sur + pour démarrer un chrono</div>
+        </div>
       </div>
     </div>
   </div>
@@ -388,6 +398,13 @@ window.deleteChrono = function(section, id) {
 };
 window.updateOrder = function(section, id, val) {
   const e = state[section].find(x=>x.id===id); if(e) { e.orderNum=val; saveState(); }
+};
+
+window.toggleCollapse = function(section) {
+  const wrap = document.getElementById('wrap-'+section);
+  const btn = document.getElementById('collapse-'+section);
+  const isCollapsed = wrap.classList.toggle('collapsed');
+  btn.classList.toggle('collapsed', isCollapsed);
 };
 
 function updateAvg(section, entries) {
