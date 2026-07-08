@@ -474,7 +474,7 @@ window.saveSession = async function() {
     await addDoc(collection(db,'sessions'), session);
     alert('✅ Session enregistrée avec succès !');
   } catch(e) {
-    alert('❌ Erreur lors de l'enregistrement. Vérifiez votre connexion.');
+    alert('❌ Erreur lors de l\'enregistrement. Vérifiez votre connexion.');
   }
 };
 
