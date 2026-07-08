@@ -542,7 +542,8 @@ async function renderHistory() {
       '</div>';
     }).join('');
   } catch(e) {
-    container.innerHTML = '<div class="no-history">Erreur de chargement. Vérifiez votre connexion.</div>';
+    console.error('Firestore error:', e.code, e.message);
+    container.innerHTML = '<div class="no-history">Erreur : ' + e.code + ' — ' + e.message + '</div>';
   }
 }
 
