@@ -103,6 +103,37 @@ body { font-family: 'Barlow', sans-serif; background: var(--bk-dark); min-height
 .btn-delete:active { color: var(--bk-red); }
 .footer { text-align: center; padding: 16px 16px 32px; font-size: 11px; color: rgba(255,248,238,0.15); letter-spacing: 1px; text-transform: uppercase; }
 
+/* ---- RESTAURANT BAR ---- */
+.restaurant-bar { background: #1a0d04; padding: 10px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(245,130,31,0.2); }
+.restaurant-bar label { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--bk-orange); white-space: nowrap; flex-shrink: 0; }
+.restaurant-bar input { flex: 1; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 6px 10px; font-size: 14px; font-family: 'Barlow', sans-serif; font-weight: 500; color: #fff; outline: none; }
+.restaurant-bar input:focus { border-color: var(--bk-orange); }
+.restaurant-bar input::placeholder { color: rgba(255,255,255,0.25); }
+.btn-save-session { background: var(--bk-yellow); border: none; border-radius: 6px; padding: 6px 12px; font-family: 'Barlow Condensed', sans-serif; font-size: 14px; font-weight: 700; color: var(--bk-dark); text-transform: uppercase; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
+.btn-save-session:active { opacity: 0.8; }
+
+/* ---- HISTORY SCREEN ---- */
+.history-header { background: var(--bk-red); padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10; }
+.history-header h1 { font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 900; color: var(--bk-yellow); text-transform: uppercase; }
+.history-content { padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+.history-card { background: #2a1506; border: 1.5px solid rgba(245,130,31,0.25); border-radius: 12px; overflow: hidden; }
+.history-card-header { background: rgba(245,130,31,0.15); padding: 10px 14px; border-bottom: 1px solid rgba(245,130,31,0.2); }
+.history-card-title { font-family: 'Barlow Condensed', sans-serif; font-size: 17px; font-weight: 700; color: var(--bk-yellow); text-transform: uppercase; letter-spacing: 0.5px; }
+.history-card-meta { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px; letter-spacing: 0.5px; }
+.history-section { padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.history-section:last-child { border-bottom: none; }
+.history-section-title { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--bk-orange); margin-bottom: 8px; }
+.history-chrono-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.history-chrono-row:last-child { border-bottom: none; }
+.history-chrono-label { font-size: 12px; color: rgba(255,255,255,0.45); }
+.history-chrono-time { font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 700; color: var(--bk-yellow); letter-spacing: 1px; }
+.history-avg { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(245,130,31,0.2); }
+.history-avg span:first-child { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--bk-orange); }
+.history-avg span:last-child { font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 700; color: #fff; letter-spacing: 1px; }
+.no-history { text-align: center; padding: 40px 20px; font-size: 14px; color: rgba(255,255,255,0.3); font-style: italic; }
+.btn-delete-session { background: rgba(214,35,0,0.2); border: none; border-radius: 5px; padding: 4px 8px; font-size: 11px; color: #ff6b5b; cursor: pointer; }
+.btn-history { background: rgba(0,0,0,0.25); border: none; border-radius: 6px; padding: 6px 10px; font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.8); cursor: pointer; }
+
 /* ---- ADMIN SCREEN ---- */
 .admin-header { background: #1a1008; border-bottom: 2px solid var(--bk-orange); padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; }
 .admin-header h1 { font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 900; color: var(--bk-yellow); text-transform: uppercase; }
@@ -226,6 +257,7 @@ body { font-family: 'Barlow', sans-serif; background: var(--bk-dark); min-height
     </div>
     <div class="header-actions">
       <span class="trial-badge" id="trial-info" style="display:none"></span>
+      <button class="btn-header" onclick="showHistory()">📋</button>
       <button class="btn-header" onclick="doLogout()">Déco.</button>
     </div>
   </div>
@@ -233,6 +265,11 @@ body { font-family: 'Barlow', sans-serif; background: var(--bk-dark); min-height
 
 
   <input type="hidden" id="auditor-name"/>
+  <div class="restaurant-bar">
+    <label>🍔 Restaurant</label>
+    <input type="text" id="restaurant-name" placeholder="Nom du restaurant..."/>
+    <button class="btn-save-session" onclick="saveSession()">💾 Enregistrer</button>
+  </div>
   <div class="main">
     <div class="section">
       <div class="section-header">
@@ -298,6 +335,17 @@ body { font-family: 'Barlow', sans-serif; background: var(--bk-dark); min-height
       <div class="no-users" id="no-users" style="display:none">Aucun utilisateur inscrit</div>
     </div>
 
+  </div>
+</div>
+
+<!-- HISTORY SCREEN -->
+<div class="screen" id="screen-history">
+  <div class="history-header">
+    <h1>📋 Historique</h1>
+    <button class="btn-history" onclick="showScreen('app')">← Retour</button>
+  </div>
+  <div class="history-content" id="history-content">
+    <div class="no-history">Aucune session enregistrée</div>
   </div>
 </div>
 
@@ -398,6 +446,85 @@ window.deleteChrono = function(section, id) {
 };
 window.updateOrder = function(section, id, val) {
   const e = state[section].find(x=>x.id===id); if(e) { e.orderNum=val; saveState(); }
+};
+
+// ---- SESSION SAVE ----
+window.saveSession = function() {
+  const restaurant = document.getElementById('restaurant-name').value.trim();
+  const auditor = document.getElementById('auditor-name').value.trim();
+  if(!restaurant) { alert('Veuillez entrer le nom du restaurant.'); return; }
+
+  const hasChronos = state.comptoir.some(e=>e.elapsed>0) || state.drive.some(e=>e.elapsed>0);
+  if(!hasChronos) { alert('Aucun chrono à enregistrer.'); return; }
+
+  const session = {
+    id: Date.now(),
+    auditor: auditor || 'Auditeur',
+    restaurant,
+    date: new Date().toLocaleDateString('fr-FR') + ' ' + new Date().toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'}),
+    comptoir: state.comptoir.filter(e=>e.elapsed>0).map(e=>({ elapsed: e.elapsed, orderNum: e.orderNum, createdAt: e.createdAt.getTime() })),
+    drive: state.drive.filter(e=>e.elapsed>0).map(e=>({ elapsed: e.elapsed, orderNum: e.orderNum, createdAt: e.createdAt.getTime() }))
+  };
+
+  let sessions = [];
+  try { sessions = JSON.parse(localStorage.getItem('bkchronos_sessions') || '[]'); } catch(e) {}
+  sessions.unshift(session);
+  try { localStorage.setItem('bkchronos_sessions', JSON.stringify(sessions)); } catch(e) {}
+
+  alert('✅ Session enregistrée avec succès !');
+};
+
+window.deleteSession = function(id) {
+  if(!confirm('Supprimer cette session ?')) return;
+  let sessions = [];
+  try { sessions = JSON.parse(localStorage.getItem('bkchronos_sessions') || '[]'); } catch(e) {}
+  sessions = sessions.filter(s => s.id !== id);
+  try { localStorage.setItem('bkchronos_sessions', JSON.stringify(sessions)); } catch(e) {}
+  renderHistory();
+};
+
+function calcAvg(chronos) {
+  if(!chronos.length) return null;
+  return chronos.reduce((sum,c)=>sum+c.elapsed,0) / chronos.length;
+}
+
+function renderHistory() {
+  const container = document.getElementById('history-content');
+  let sessions = [];
+  try { sessions = JSON.parse(localStorage.getItem('bkchronos_sessions') || '[]'); } catch(e) {}
+  if(!sessions.length) { container.innerHTML = '<div class="no-history">Aucune session enregistrée</div>'; return; }
+
+  container.innerHTML = sessions.map(s => {
+    const compRows = s.comptoir.map((c,i) =>
+      '<div class="history-chrono-row">' +
+        '<span class="history-chrono-label">Chrono '+(i+1)+(c.orderNum?' · Cmd #'+c.orderNum:'')+'</span>' +
+        '<span class="history-chrono-time">'+formatTime(c.elapsed)+'</span>' +
+      '</div>'
+    ).join('');
+    const driveRows = s.drive.map((c,i) =>
+      '<div class="history-chrono-row">' +
+        '<span class="history-chrono-label">Chrono '+(i+1)+(c.orderNum?' · Cmd #'+c.orderNum:'')+'</span>' +
+        '<span class="history-chrono-time">'+formatTime(c.elapsed)+'</span>' +
+      '</div>'
+    ).join('');
+    const avgComp = calcAvg(s.comptoir);
+    const avgDrive = calcAvg(s.drive);
+
+    return '<div class="history-card">' +
+      '<div class="history-card-header">' +
+        '<div class="history-card-title">🍔 '+s.restaurant+'</div>' +
+        '<div class="history-card-meta">'+s.auditor+' &nbsp;·&nbsp; '+s.date+'</div>' +
+      '</div>' +
+      (s.comptoir.length ? '<div class="history-section"><div class="history-section-title">Comptoir</div>'+compRows+(avgComp?'<div class="history-avg"><span>Moyenne</span><span>'+formatTime(avgComp)+'</span></div>':'')+'</div>' : '') +
+      (s.drive.length ? '<div class="history-section"><div class="history-section-title">Drive</div>'+driveRows+(avgDrive?'<div class="history-avg"><span>Moyenne</span><span>'+formatTime(avgDrive)+'</span></div>':'')+'</div>' : '') +
+      '<div style="padding:8px 14px;text-align:right"><button class="btn-delete-session" onclick="deleteSession('+s.id+')">🗑 Supprimer</button></div>' +
+    '</div>';
+  }).join('');
+}
+
+window.showHistory = function() {
+  renderHistory();
+  showScreen('history');
 };
 
 window.toggleCollapse = function(section) {
