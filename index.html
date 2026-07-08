@@ -566,10 +566,10 @@ function renderChrono(section) {
 }
 
 // ---- SCREENS ----
-function showScreen(id) {
+window.showScreen = function(id) {
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById('screen-'+id).classList.add('active');
-}
+};
 
 // ---- AUTH ----
 window.switchTab = function(tab) {
