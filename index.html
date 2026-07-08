@@ -353,7 +353,7 @@ body { font-family: 'Barlow', sans-serif; background: var(--bk-dark); min-height
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, getDocs, addDoc, query, where, orderBy, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBhen95nMD1gA7SjGTGp66wPtSAtG7HP4w",
@@ -449,7 +449,7 @@ window.updateOrder = function(section, id, val) {
 };
 
 // ---- SESSION SAVE ----
-window.saveSession = async function() {
+window.saveSession = function() {
   const restaurant = document.getElementById('restaurant-name').value.trim();
   const auditor = document.getElementById('auditor-name').value.trim();
   if(!restaurant) { alert('Veuillez entrer le nom du restaurant.'); return; }
@@ -457,35 +457,30 @@ window.saveSession = async function() {
   const hasChronos = state.comptoir.some(e=>e.elapsed>0) || state.drive.some(e=>e.elapsed>0);
   if(!hasChronos) { alert('Aucun chrono à enregistrer.'); return; }
 
-  const user = auth.currentUser;
-  if(!user) return;
-
   const session = {
-    uid: user.uid,
-    auditor: auditor || user.displayName || user.email,
+    id: Date.now(),
+    auditor: auditor || 'Auditeur',
     restaurant,
     date: new Date().toLocaleDateString('fr-FR') + ' ' + new Date().toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'}),
-    comptoir: state.comptoir.filter(e=>e.elapsed>0).map(e=>({ elapsed: e.elapsed, orderNum: e.orderNum||'', createdAt: e.createdAt.getTime() })),
-    drive: state.drive.filter(e=>e.elapsed>0).map(e=>({ elapsed: e.elapsed, orderNum: e.orderNum||'', createdAt: e.createdAt.getTime() })),
-    createdAt: serverTimestamp()
+    comptoir: state.comptoir.filter(e=>e.elapsed>0).map(e=>({ elapsed: e.elapsed, orderNum: e.orderNum, createdAt: e.createdAt.getTime() })),
+    drive: state.drive.filter(e=>e.elapsed>0).map(e=>({ elapsed: e.elapsed, orderNum: e.orderNum, createdAt: e.createdAt.getTime() }))
   };
 
-  try {
-    await addDoc(collection(db,'sessions'), session);
-    alert('✅ Session enregistrée avec succès !');
-  } catch(e) {
-    alert('❌ Erreur lors de l\'enregistrement. Vérifiez votre connexion.');
-  }
+  let sessions = [];
+  try { sessions = JSON.parse(localStorage.getItem('bkchronos_sessions') || '[]'); } catch(e) {}
+  sessions.unshift(session);
+  try { localStorage.setItem('bkchronos_sessions', JSON.stringify(sessions)); } catch(e) {}
+
+  alert('✅ Session enregistrée avec succès !');
 };
 
-window.deleteSession = async function(docId) {
+window.deleteSession = function(id) {
   if(!confirm('Supprimer cette session ?')) return;
-  try {
-    await deleteDoc(doc(db,'sessions',docId));
-    renderHistory();
-  } catch(e) {
-    alert('❌ Erreur lors de la suppression.');
-  }
+  let sessions = [];
+  try { sessions = JSON.parse(localStorage.getItem('bkchronos_sessions') || '[]'); } catch(e) {}
+  sessions = sessions.filter(s => s.id !== id);
+  try { localStorage.setItem('bkchronos_sessions', JSON.stringify(sessions)); } catch(e) {}
+  renderHistory();
 };
 
 function calcAvg(chronos) {
@@ -493,62 +488,43 @@ function calcAvg(chronos) {
   return chronos.reduce((sum,c)=>sum+c.elapsed,0) / chronos.length;
 }
 
-async function renderHistory() {
+function renderHistory() {
   const container = document.getElementById('history-content');
-  container.innerHTML = '<div class="no-history">Chargement...</div>';
+  let sessions = [];
+  try { sessions = JSON.parse(localStorage.getItem('bkchronos_sessions') || '[]'); } catch(e) {}
+  if(!sessions.length) { container.innerHTML = '<div class="no-history">Aucune session enregistrée</div>'; return; }
 
-  const user = auth.currentUser;
-  if(!user) return;
+  container.innerHTML = sessions.map(s => {
+    const compRows = s.comptoir.map((c,i) =>
+      '<div class="history-chrono-row">' +
+        '<span class="history-chrono-label">Chrono '+(i+1)+(c.orderNum?' · Cmd #'+c.orderNum:'')+'</span>' +
+        '<span class="history-chrono-time">'+formatTime(c.elapsed)+'</span>' +
+      '</div>'
+    ).join('');
+    const driveRows = s.drive.map((c,i) =>
+      '<div class="history-chrono-row">' +
+        '<span class="history-chrono-label">Chrono '+(i+1)+(c.orderNum?' · Cmd #'+c.orderNum:'')+'</span>' +
+        '<span class="history-chrono-time">'+formatTime(c.elapsed)+'</span>' +
+      '</div>'
+    ).join('');
+    const avgComp = calcAvg(s.comptoir);
+    const avgDrive = calcAvg(s.drive);
 
-  try {
-    const isAdmin = user.email === ADMIN_EMAIL;
-    let q;
-    if(isAdmin) {
-      q = query(collection(db,'sessions'), orderBy('createdAt','desc'));
-    } else {
-      q = query(collection(db,'sessions'), where('uid','==',user.uid), orderBy('createdAt','desc'));
-    }
-    const snap = await getDocs(q);
-
-    if(snap.empty) { container.innerHTML = '<div class="no-history">Aucune session enregistrée</div>'; return; }
-
-    container.innerHTML = snap.docs.map(d => {
-      const s = d.data();
-      const docId = d.id;
-      const compRows = (s.comptoir||[]).map((c,i) =>
-        '<div class="history-chrono-row">' +
-          '<span class="history-chrono-label">Chrono '+(i+1)+(c.orderNum?' · Cmd #'+c.orderNum:'')+'</span>' +
-          '<span class="history-chrono-time">'+formatTime(c.elapsed)+'</span>' +
-        '</div>'
-      ).join('');
-      const driveRows = (s.drive||[]).map((c,i) =>
-        '<div class="history-chrono-row">' +
-          '<span class="history-chrono-label">Chrono '+(i+1)+(c.orderNum?' · Cmd #'+c.orderNum:'')+'</span>' +
-          '<span class="history-chrono-time">'+formatTime(c.elapsed)+'</span>' +
-        '</div>'
-      ).join('');
-      const avgComp = calcAvg(s.comptoir||[]);
-      const avgDrive = calcAvg(s.drive||[]);
-      const adminTag = isAdmin ? '<span style="font-size:10px;color:rgba(255,255,255,0.35)"> · '+s.auditor+'</span>' : '';
-
-      return '<div class="history-card">' +
-        '<div class="history-card-header">' +
-          '<div class="history-card-title">🍔 '+s.restaurant+adminTag+'</div>' +
-          '<div class="history-card-meta">'+s.auditor+' &nbsp;·&nbsp; '+s.date+'</div>' +
-        '</div>' +
-        ((s.comptoir||[]).length ? '<div class="history-section"><div class="history-section-title">Comptoir</div>'+compRows+(avgComp?'<div class="history-avg"><span>Moyenne</span><span>'+formatTime(avgComp)+'</span></div>':'')+'</div>' : '') +
-        ((s.drive||[]).length ? '<div class="history-section"><div class="history-section-title">Drive</div>'+driveRows+(avgDrive?'<div class="history-avg"><span>Moyenne</span><span>'+formatTime(avgDrive)+'</span></div>':'')+'</div>' : '') +
-        '<div style="padding:8px 14px;text-align:right"><button class="btn-delete-session" onclick="deleteSession(''+docId+'')">🗑 Supprimer</button></div>' +
-      '</div>';
-    }).join('');
-  } catch(e) {
-    container.innerHTML = '<div class="no-history">Erreur de chargement. Vérifiez votre connexion.</div>';
-  }
+    return '<div class="history-card">' +
+      '<div class="history-card-header">' +
+        '<div class="history-card-title">🍔 '+s.restaurant+'</div>' +
+        '<div class="history-card-meta">'+s.auditor+' &nbsp;·&nbsp; '+s.date+'</div>' +
+      '</div>' +
+      (s.comptoir.length ? '<div class="history-section"><div class="history-section-title">Comptoir</div>'+compRows+(avgComp?'<div class="history-avg"><span>Moyenne</span><span>'+formatTime(avgComp)+'</span></div>':'')+'</div>' : '') +
+      (s.drive.length ? '<div class="history-section"><div class="history-section-title">Drive</div>'+driveRows+(avgDrive?'<div class="history-avg"><span>Moyenne</span><span>'+formatTime(avgDrive)+'</span></div>':'')+'</div>' : '') +
+      '<div style="padding:8px 14px;text-align:right"><button class="btn-delete-session" onclick="deleteSession('+s.id+')">🗑 Supprimer</button></div>' +
+    '</div>';
+  }).join('');
 }
 
-window.showHistory = async function() {
+window.showHistory = function() {
+  renderHistory();
   showScreen('history');
-  await renderHistory();
 };
 
 window.toggleCollapse = function(section) {
